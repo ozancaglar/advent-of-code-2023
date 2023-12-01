@@ -9,6 +9,29 @@ import (
 	"github.com/ozancaglar/advent-of-code-2023/util"
 )
 
+var (
+	wordToDigit = map[string]string{
+		"one":   "1",
+		"two":   "2",
+		"three": "3",
+		"four":  "4",
+		"five":  "5",
+		"six":   "6",
+		"seven": "7",
+		"eight": "8",
+		"nine":  "9",
+	}
+
+	wordCorrectionMap = map[string]string{
+		"oneight":   "oneeight",
+		"twone":     "twoone",
+		"sevenine":  "sevennine",
+		"nineight":  "nineeight",
+		"eightwo":   "eighttwo",
+		"eighthree": "eightthree",
+	}
+)
+
 func Solve() {
 	partOne()
 	partTwo()
@@ -33,25 +56,6 @@ func partTwo() {
 	scanner := util.StreamLines("day1/input.txt")
 
 	re := regexp.MustCompile("(?:one|two|three|four|five|six|seven|eight|nine|zero|[0-9])")
-	wordToDigit := map[string]string{
-		"one":   "1",
-		"two":   "2",
-		"three": "3",
-		"four":  "4",
-		"five":  "5",
-		"six":   "6",
-		"seven": "7",
-		"eight": "8",
-		"nine":  "9",
-	}
-	wordCorrectionMap := map[string]string{
-		"oneight":   "oneeight",
-		"twone":     "twoone",
-		"sevenine":  "sevennine",
-		"nineight":  "nineeight",
-		"eightwo":   "eighttwo",
-		"eighthree": "eightthree",
-	}
 
 	total := 0
 	for scanner.Scan() {
