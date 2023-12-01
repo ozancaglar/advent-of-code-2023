@@ -44,10 +44,22 @@ func partTwo() {
 		"eight": "8",
 		"nine":  "9",
 	}
-	total := 0
+	wordCorrectionMap := map[string]string{
+		"oneight":   "oneeight",
+		"twone":     "twoone",
+		"sevenine":  "sevennine",
+		"nineight":  "nineeight",
+		"eightwo":   "eighttwo",
+		"eighthree": "eightthree",
+	}
 
+	total := 0
 	for scanner.Scan() {
-		matches := re.FindAllString(scanner.Text(), -1)
+		text := scanner.Text()
+		for k, v := range wordCorrectionMap {
+			text = strings.Replace(text, k, v, -1)
+		}
+		matches := re.FindAllString(text, -1)
 		for i, match := range matches {
 			if len(match) == 1 {
 				continue
@@ -55,7 +67,6 @@ func partTwo() {
 			matches[i] = wordToDigit[match]
 		}
 		joinedMatches := strings.Join(matches, "")
-
 		total += addPoints(joinedMatches)
 	}
 
