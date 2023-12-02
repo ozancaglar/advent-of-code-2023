@@ -79,7 +79,7 @@ func countIds(cc []cubeCount, totalNumberOfCubes cubes) int {
 	for _, c := range cc {
 		add := true
 		for _, cubesInSet := range c.cubesPerSet {
-			if cubesInSet.blue >= totalNumberOfCubes.blue || cubesInSet.red >= totalNumberOfCubes.red || cubesInSet.green >= totalNumberOfCubes.green {
+			if cubesInSet.blue > totalNumberOfCubes.blue || cubesInSet.red > totalNumberOfCubes.red || cubesInSet.green > totalNumberOfCubes.green {
 				add = false
 			}
 		}
