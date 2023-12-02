@@ -35,6 +35,8 @@ func Solve(filename string) {
 	for _, c := range countedCubes {
 		populatedCountedCubes = append(populatedCountedCubes, populateMinimumNumberOfCubes(c))
 	}
+
+	log.Printf("Day two, part two answer: %v", sumPowers(populatedCountedCubes))
 }
 
 func countCubesInGame(game string) cubeCount {
@@ -111,4 +113,16 @@ func populateMinimumNumberOfCubes(cc cubeCount) cubeCount {
 	}
 
 	return cc
+}
+
+func calculatePowers(cc cubeCount) int {
+	return cc.minimumNumberOfCubes.red * cc.minimumNumberOfCubes.blue * cc.minimumNumberOfCubes.green
+}
+
+func sumPowers(ccs []cubeCount) int {
+	sum := 0
+	for _, c := range ccs {
+		sum += calculatePowers(c)
+	}
+	return sum
 }
