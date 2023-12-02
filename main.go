@@ -2,25 +2,29 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/manifoldco/promptui"
 	"github.com/ozancaglar/advent-of-code-2023/day1"
+	"github.com/ozancaglar/advent-of-code-2023/day2"
 )
 
 type day struct {
-	Name     string
-	Function func()
+	Day      string
+	Function func(filename string)
 }
 
 func main() {
+
 	days := []day{
-		{Name: "1", Function: day1.Solve},
+		{Day: "1", Function: day1.Solve},
+		{Day: "2", Function: day2.Solve},
 	}
 
 	templates := &promptui.SelectTemplates{
-		Active:   "\U000025CF {{ .Name | blue }}",
-		Inactive: "\U000025CB {{ .Name | red }}",
-		Selected: "{{ .Name | red | cyan }}",
+		Active:   "\U000025CF {{ .Day | blue }}",
+		Inactive: "\U000025CB {{ .Day | red }}",
+		Selected: "{{ .Day | red | cyan }}",
 	}
 
 	prompt := promptui.Select{
@@ -36,5 +40,5 @@ func main() {
 		return
 	}
 
-	days[i].Function()
+	days[i].Function(fmt.Sprintf("day%s/input.txt", strconv.Itoa(i+1)))
 }
