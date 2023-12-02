@@ -10,14 +10,14 @@ import (
 )
 
 type cubeCount struct {
-	id    int
-	cubes cubes
+	id          int
+	cubesPerSet []cubes
 }
 
 type cubes struct {
 	red   int
-	green int
 	blue  int
+	green int
 }
 
 func Solve(filename string) {
@@ -46,34 +46,44 @@ func countCubesInGame(game string) cubeCount {
 	}
 	c.id = i
 
+	j := 0
 	for _, s := range strings.Split(frame[1], ";") {
+		c.cubesPerSet = append(c.cubesPerSet, cubes{red: 0, blue: 0, green: 0})
+
 		for _, furtherSplitString := range strings.Split(s, ", ") {
 			cleanedString := strings.TrimSpace(furtherSplitString) // of the form 3 blue\n4 red\n...
-			numberOfCubes, err := strconv.Atoi(string(cleanedString[0]))
+			numberOfCubes, err := strconv.Atoi(re.FindAllString(cleanedString, -1)[0])
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			switch strings.Split(cleanedString, " ")[1] {
 			case "red":
-				c.cubes.red += numberOfCubes
-			case "green":
-				c.cubes.green += numberOfCubes
+				c.cubesPerSet[j].red += numberOfCubes
 			case "blue":
-				c.cubes.blue += numberOfCubes
+				c.cubesPerSet[j].blue += numberOfCubes
+			case "green":
+				c.cubesPerSet[j].green += numberOfCubes
 			default:
 				log.Fatalf("unexpected case")
 			}
-
 		}
+		j += 1
 	}
 	return c
 }
 
-func countIds(cc []cubeCount, desiredNumberOfCubes cubes) int {
+func countIds(cc []cubeCount, totalNumberOfCubes cubes) int {
 	total := 0
 
 	for _, c := range cc {
-		if c.cubes.blue >= desiredNumberOfCubes.blue && c.cubes.red >= desiredNumberOfCubes.red && c.cubes.green >= desiredNumberOfCubes.green {
+		add := true
+		for _, cubesInSet := range c.cubesPerSet {
+			if cubesInSet.blue >= totalNumberOfCubes.blue || cubesInSet.red >= totalNumberOfCubes.red || cubesInSet.green >= totalNumberOfCubes.green {
+				add = false
+			}
+		}
+		if add {
 			total += c.id
 		}
 	}
