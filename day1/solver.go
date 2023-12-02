@@ -32,13 +32,13 @@ var (
 	}
 )
 
-func Solve() {
-	partOne()
-	partTwo()
+func Solve(filename string) {
+	partOne(filename)
+	partTwo(filename)
 }
 
-func partOne() {
-	scanner := util.StreamLines("day1/input.txt")
+func partOne(filename string) {
+	scanner := util.StreamLines(filename)
 
 	re := regexp.MustCompile("[1-9]+")
 	total := 0
@@ -52,8 +52,8 @@ func partOne() {
 	log.Printf("Day one, part one answer: %v", total)
 }
 
-func partTwo() {
-	scanner := util.StreamLines("day1/input.txt")
+func partTwo(filename string) {
+	scanner := util.StreamLines(filename)
 
 	re := regexp.MustCompile("(?:one|two|three|four|five|six|seven|eight|nine|zero|[0-9])")
 
