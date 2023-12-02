@@ -11,6 +11,10 @@ import (
 
 type cubeCount struct {
 	id    int
+	cubes cubes
+}
+
+type cubes struct {
 	red   int
 	green int
 	blue  int
@@ -24,13 +28,11 @@ func partOne(filename string) {
 	scanner := util.StreamLines(filename)
 	countedCubes := make([]cubeCount, 0)
 
-	sum := 0
-
 	for scanner.Scan() {
 		countedCubes = append(countedCubes, countCubesInGame(scanner.Text()))
 	}
 
-	log.Printf("Day two, part one answer: %v", sum)
+	log.Printf("Day two, part one answer: %v", countIds(countedCubes, cubes{red: 12, green: 13, blue: 14}))
 }
 
 func countCubesInGame(game string) cubeCount {
@@ -53,11 +55,11 @@ func countCubesInGame(game string) cubeCount {
 			}
 			switch strings.Split(cleanedString, " ")[1] {
 			case "red":
-				c.red += numberOfCubes
+				c.cubes.red += numberOfCubes
 			case "green":
-				c.green += numberOfCubes
+				c.cubes.green += numberOfCubes
 			case "blue":
-				c.blue += numberOfCubes
+				c.cubes.blue += numberOfCubes
 			default:
 				log.Fatalf("unexpected case")
 			}
@@ -65,4 +67,16 @@ func countCubesInGame(game string) cubeCount {
 		}
 	}
 	return c
+}
+
+func countIds(cc []cubeCount, desiredNumberOfCubes cubes) int {
+	total := 0
+
+	for _, c := range cc {
+		if c.cubes.blue >= desiredNumberOfCubes.blue && c.cubes.red >= desiredNumberOfCubes.red && c.cubes.green >= desiredNumberOfCubes.green {
+			total += c.id
+		}
+	}
+
+	return total
 }
