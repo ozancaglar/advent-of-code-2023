@@ -30,6 +30,11 @@ func Solve(filename string) {
 	}
 
 	log.Printf("Day two, part one answer: %v", countIds(countedCubes, cubes{red: 12, green: 13, blue: 14}))
+
+	populatedCountedCubes := make([]cubeCount, 0)
+	for _, c := range countedCubes {
+		populatedCountedCubes = append(populatedCountedCubes, populateMinimumNumberOfCubes(c))
+	}
 }
 
 func countCubesInGame(game string) cubeCount {
@@ -88,6 +93,22 @@ func countIds(cc []cubeCount, totalNumberOfCubes cubes) int {
 	return total
 }
 
-func populateMinimumNumberOfCubes(cc []cubeCount) {
-	return
+func populateMinimumNumberOfCubes(cc cubeCount) cubeCount {
+
+	cc.minimumNumberOfCubes = cubes{red: 0, green: 0, blue: 0}
+	for _, cubeInSet := range cc.cubesPerSet {
+		if cubeInSet.red > cc.minimumNumberOfCubes.red {
+			cc.minimumNumberOfCubes.red = cubeInSet.red
+		}
+
+		if cubeInSet.green > cc.minimumNumberOfCubes.green {
+			cc.minimumNumberOfCubes.green = cubeInSet.green
+		}
+
+		if cubeInSet.blue > cc.minimumNumberOfCubes.blue {
+			cc.minimumNumberOfCubes.blue = cubeInSet.blue
+		}
+	}
+
+	return cc
 }
