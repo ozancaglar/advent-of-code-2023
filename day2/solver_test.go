@@ -18,3 +18,11 @@ func TestCountIds(t *testing.T) {
 	assert.Equal(t, 8, countIds([]cubeCount{{id: 1, cubesPerSet: []cubes{{blue: 3, red: 4}, {red: 1, green: 2, blue: 6}, {green: 2}}}, {id: 2, cubesPerSet: []cubes{{blue: 1, green: 2}, {red: 1, green: 3, blue: 4}, {green: 1, blue: 1}}}, {id: 3, cubesPerSet: []cubes{{blue: 6, green: 8, red: 20}, {red: 4, green: 13, blue: 5}, {green: 5, red: 1}}},
 		{id: 4, cubesPerSet: []cubes{{blue: 6, green: 1, red: 3}, {red: 6, green: 3}, {green: 3, red: 14, blue: 15}}}, {id: 5, cubesPerSet: []cubes{{blue: 1, green: 3, red: 6}, {red: 1, green: 2, blue: 2}}}}, cubes{red: 12, blue: 14, green: 13}))
 }
+
+func TestPopulateMinimumNumberOfCubes(t *testing.T) {
+	cubeCounts := []cubeCount{{id: 1, cubesPerSet: []cubes{{blue: 3, red: 4}, {red: 1, green: 2, blue: 6}, {green: 2}}}}
+	populateMinimumNumberOfCubes(cubeCounts)
+	assert.Equal(t, 4, cubeCounts[0].minimumNumberOfCubes.red)
+	assert.Equal(t, 6, cubeCounts[0].minimumNumberOfCubes.blue)
+	assert.Equal(t, 2, cubeCounts[0].minimumNumberOfCubes.green)
+}

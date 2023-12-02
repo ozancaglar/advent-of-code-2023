@@ -10,8 +10,9 @@ import (
 )
 
 type cubeCount struct {
-	id          int
-	cubesPerSet []cubes
+	id                   int
+	cubesPerSet          []cubes
+	minimumNumberOfCubes cubes
 }
 
 type cubes struct {
@@ -21,10 +22,6 @@ type cubes struct {
 }
 
 func Solve(filename string) {
-	partOne(filename)
-}
-
-func partOne(filename string) {
 	scanner := util.StreamLines(filename)
 	countedCubes := make([]cubeCount, 0)
 
@@ -89,4 +86,8 @@ func countIds(cc []cubeCount, totalNumberOfCubes cubes) int {
 	}
 
 	return total
+}
+
+func populateMinimumNumberOfCubes(cc []cubeCount) {
+	return
 }
