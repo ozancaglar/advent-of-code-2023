@@ -72,6 +72,67 @@ func getDigitsInRow(row string) []rowNumber {
 	return rn
 }
 
+func getIndexesToCheck(rowNumber, colNumber, maxRow, maxCol int) map[int][]int {
+	m := make(map[int][]int)
+	minRow, minCol := 0, 0
+
+	if rowNumber == minRow && colNumber == minCol {
+		m[rowNumber] = []int{colNumber + 1}
+		m[rowNumber+1] = []int{colNumber, colNumber + 1}
+		return m
+	}
+
+	if rowNumber == maxRow && colNumber == minCol {
+		m[rowNumber-1] = []int{colNumber, colNumber + 1}
+		m[rowNumber] = []int{colNumber + 1}
+		return m
+	}
+
+	if rowNumber == minRow && colNumber == maxCol {
+		m[rowNumber] = []int{colNumber - 1}
+		m[rowNumber+1] = []int{colNumber, colNumber - 1}
+		return m
+	}
+
+	if rowNumber == maxRow && colNumber == maxCol {
+		m[rowNumber-1] = []int{colNumber, colNumber - 1}
+		m[rowNumber] = []int{colNumber - 1}
+		return m
+	}
+
+	if rowNumber == minRow {
+		m[rowNumber] = []int{colNumber - 1, colNumber + 1}
+		m[rowNumber+1] = []int{colNumber - 1, colNumber, colNumber + 1}
+		return m
+	}
+
+	if rowNumber == maxRow {
+		m[rowNumber-1] = []int{colNumber - 1, colNumber, colNumber + 1}
+		m[rowNumber] = []int{colNumber - 1, colNumber + 1}
+		return m
+	}
+
+	if colNumber == minCol {
+		m[rowNumber-1] = []int{colNumber, colNumber + 1}
+		m[rowNumber] = []int{colNumber + 1}
+		m[rowNumber+1] = []int{colNumber, colNumber + 1}
+		return m
+	}
+
+	if colNumber == maxCol {
+		m[rowNumber-1] = []int{colNumber - 1, colNumber}
+		m[rowNumber] = []int{colNumber - 1}
+		m[rowNumber+1] = []int{colNumber - 1, colNumber}
+		return m
+	}
+
+	m[rowNumber-1] = []int{colNumber - 1, colNumber, colNumber + 1}
+	m[rowNumber] = []int{colNumber - 1, colNumber + 1}
+	m[rowNumber+1] = []int{colNumber - 1, colNumber, colNumber + 1}
+
+	return m
+}
+
 type rowNumber struct {
 	number  int
 	indexes []int
