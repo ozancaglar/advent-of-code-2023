@@ -12,6 +12,7 @@ func TestGetSymbolCol(t *testing.T) {
 	assert.Equal(t, []int{2, 9}, getSymbolCol("..*......*", nil))
 	rune := '*'
 	assert.Equal(t, []int{2, 9}, getSymbolCol("..*......*", &rune))
+	assert.Equal(t, []int{2, 9}, getSymbolCol("..*..$...*", &rune))
 }
 
 func TestGetDigitsInRow(t *testing.T) {
