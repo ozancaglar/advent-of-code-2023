@@ -44,5 +44,5 @@ func main() {
 		return
 	}
 
-	days[i].Function(fmt.Sprintf("day%s/input.txt", strconv.Itoa(i+1)))
+	days[i].Function(fmt.Sprintf("day%s/input .txt", strconv.Itoa(i+1)))
 }

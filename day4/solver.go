@@ -34,7 +34,9 @@ func Solve(filename string) {
 		j += 1
 	}
 
-	log.Printf("Day four, part one answer: %v", sumForPartOne(parseCards(cards, re), winningNumbers))
+	parsedCards := parseCards(cards, re)
+	log.Printf("Day four, part one answer: %v", sumForPartOne(parsedCards, winningNumbers))
+	log.Printf("Day four, part two answer: %v", partTwo(parsedCards))
 }
 
 type card struct {
@@ -73,5 +75,38 @@ func sumForPartOne(parsedCards []*card, winningNumbers map[int][]int) int {
 			sum += int(math.Pow(2, float64(c.numberOfWinningNumbers)-1))
 		}
 	}
+	return sum
+}
+
+func partTwo(parsedCards []*card) int {
+	sum := 0
+	remainingCalculations := make(map[int]int)
+	for i := 1; i <= len(parsedCards)-1; i++ {
+		remainingCalculations[i] = 1
+	}
+
+	for i, p := range parsedCards {
+		if i == 0 {
+			sum += 1
+			for j := i + p.numberOfWinningNumbers; j > i; j-- {
+				if j <= len(parsedCards)-1 {
+					remainingCalculations[j] += 1
+				}
+			}
+		}
+
+		if i > 0 {
+			for remainingCalculations[i] != 0 {
+				sum += 1
+				for j := i + p.numberOfWinningNumbers; j > i; j-- {
+					if j <= len(parsedCards)-1 {
+						remainingCalculations[j] += 1
+					}
+				}
+				remainingCalculations[i] -= 1
+			}
+		}
+	}
+
 	return sum
 }
