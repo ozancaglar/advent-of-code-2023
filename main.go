@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/manifoldco/promptui"
 	"github.com/ozancaglar/advent-of-code-2023/day1"
@@ -31,11 +32,20 @@ func main() {
 		Selected: "{{ .Day | red | cyan }}",
 	}
 
+	searcher := func(input string, index int) bool {
+		day := days[index]
+		name := strings.Replace(strings.ToLower(day.Day), " ", "", -1)
+		input = strings.Replace(strings.ToLower(input), " ", "", -1)
+
+		return strings.Contains(name, input)
+	}
+
 	prompt := promptui.Select{
 		Label:     "Which day would you like the solution to?",
 		Items:     days,
 		Templates: templates,
 		Size:      8,
+		Searcher:  searcher,
 	}
 
 	i, _, err := prompt.Run()
@@ -44,5 +54,5 @@ func main() {
 		return
 	}
 
-	days[i].Function(fmt.Sprintf("day%s/input .txt", strconv.Itoa(i+1)))
+	days[i].Function(fmt.Sprintf("day%s/input.txt", strconv.Itoa(i+1)))
 }
