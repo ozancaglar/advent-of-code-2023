@@ -32,8 +32,16 @@ func Solve(filename string) {
 	log.Printf("Day three, part one answer: %v", getSumForPartOne(indexesToCheck, digitsInRows))
 }
 
-func getSymbolCol(input string) (cols []int) {
+func getSymbolCol(input string, specificSymbol *rune) (cols []int) {
 	symbolColumns := make([]int, 0)
+	if specificSymbol != nil {
+		for i, c := range input {
+			if c == *specificSymbol {
+				symbolColumns = append(symbolColumns, i)
+			}
+		}
+		return symbolColumns
+	}
 	for i, c := range input {
 		if !unicode.IsLetter(c) && !unicode.IsNumber(c) && c != 46 {
 			symbolColumns = append(symbolColumns, i)
@@ -149,7 +157,7 @@ func indexesToCheckMap(input []string, filename string) map[int][]int {
 	indexesToCheck := make(map[int][]int)
 
 	for rowNumber, row := range input {
-		symbolsInRow := getSymbolCol(row)
+		symbolsInRow := getSymbolCol(row, nil)
 		for _, s := range symbolsInRow {
 			indexesToCheckMaps = append(indexesToCheckMaps, getIndexesToCheck(rowNumber, s, maxRow, len(row)-1))
 		}
@@ -160,7 +168,6 @@ func indexesToCheckMap(input []string, filename string) map[int][]int {
 	}
 
 	return indexesToCheck
-
 }
 
 func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]*rowNumber) int {
@@ -182,4 +189,10 @@ func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]*rowN
 		}
 	}
 	return sum
+}
+
+// Part two
+
+func gearRatio(a, b int) int {
+	return a * b
 }
