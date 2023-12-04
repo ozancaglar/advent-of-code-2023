@@ -28,3 +28,7 @@ func TestGetIndexesToCheck(t *testing.T) {
 	assert.Equal(t, map[int][]int{8: {9, 8}, 9: {8}}, getIndexesToCheck(9, 9, 9, 9))
 	assert.Equal(t, map[int][]int{0: {0, 1, 2}, 1: {0, 2}, 2: {0, 1, 2}}, getIndexesToCheck(1, 1, 9, 9))
 }
+
+// func TestSumForPartOne(t *testing.T) {
+// 	assert.Equal(t, 4361, sumForPartOne())
+// }

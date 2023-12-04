@@ -1,34 +1,43 @@
 package day3
 
 import (
-	"fmt"
 	"log"
+	"maps"
 	"strconv"
 	"unicode"
 
 	"github.com/ozancaglar/advent-of-code-2023/util"
 )
 
+type rowNumber struct {
+	number  int
+	indexes []int
+	added   bool
+}
+
 func Solve(filename string) {
+	filename = "day3/test.txt"
 	scanner := util.StreamLines(filename)
+	digitsInRows := make(map[int][]rowNumber)
+
 	input := make([]string, 0)
-	sum := 0
-
+	rowNumber := 0
 	for scanner.Scan() {
-		input = append(input, scanner.Text())
+		row := scanner.Text()
+		input = append(input, row)
+		digitsInRows[rowNumber] = getDigitsInRow(row)
+		rowNumber += 1
 	}
 
-	for i, row := range input {
-		fmt.Println(i, row)
-	}
+	indexesToCheck := indexesToCheckMap(input, filename)
 
-	log.Printf("Day three, part one answer: %v", sum)
+	log.Printf("Day three, part one answer: %v", getSumForPartOne(indexesToCheck, digitsInRows))
 }
 
 func getSymbolCol(input string) (cols []int) {
 	symbolColumns := make([]int, 0)
 	for i, c := range input {
-		if !unicode.IsLetter(c) && c != 46 {
+		if !unicode.IsLetter(c) && !unicode.IsNumber(c) && c != 46 {
 			symbolColumns = append(symbolColumns, i)
 		}
 	}
@@ -133,8 +142,46 @@ func getIndexesToCheck(rowNumber, colNumber, maxRow, maxCol int) map[int][]int {
 	return m
 }
 
-type rowNumber struct {
-	number  int
-	indexes []int
-	added   bool
+func indexesToCheckMap(input []string, filename string) map[int][]int {
+	maxRow, err := util.LineCounter(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	indexesToCheckMaps := make([]map[int][]int, 0)
+	indexesToCheck := make(map[int][]int)
+
+	for rowNumber, row := range input {
+		symbolsInRow := getSymbolCol(row)
+		for _, s := range symbolsInRow {
+			indexesToCheckMaps = append(indexesToCheckMaps, getIndexesToCheck(rowNumber, s, maxRow, len(row)-1))
+		}
+	}
+
+	for _, v := range indexesToCheckMaps {
+		maps.Copy(indexesToCheck, v)
+	}
+
+	return indexesToCheck
+
+}
+
+func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]rowNumber) int {
+	sum := 0
+
+	for rowNumber := range indexesToCheck {
+		for _, indexToCheckInRow := range indexesToCheck[rowNumber] {
+			for _, digitInRow := range digitsInRows[rowNumber] {
+				if digitInRow.added {
+					continue
+				}
+				for _, i := range digitInRow.indexes {
+					if i == indexToCheckInRow {
+						sum += digitInRow.number
+						digitInRow.added = true
+					}
+				}
+			}
+		}
+	}
+	return sum
 }
