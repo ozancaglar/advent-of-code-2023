@@ -2,6 +2,7 @@ package day3
 
 import (
 	"log"
+	"slices"
 	"strconv"
 	"unicode"
 
@@ -27,9 +28,12 @@ func Solve(filename string) {
 		rowNumber += 1
 	}
 
-	indexesToCheck := indexesToCheckMap(input, filename)
-
-	log.Printf("Day three, part one answer: %v", getSumForPartOne(indexesToCheck, digitsInRows))
+	maxRow, err := util.LineCounter(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Day three, part one answer: %v", getSumForPartOne(indexesToCheckMap(input, maxRow), digitsInRows))
+	log.Printf("Day three, part two answer: %v", getSumForPartTwo(input, maxRow, digitsInRows))
 }
 
 func getSymbolCol(input string, specificSymbol *rune) (cols []int) {
@@ -148,11 +152,7 @@ func getIndexesToCheck(rowNumber, colNumber, maxRow, maxCol int) map[int][]int {
 	return m
 }
 
-func indexesToCheckMap(input []string, filename string) map[int][]int {
-	maxRow, err := util.LineCounter(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
+func indexesToCheckMap(input []string, maxRow int) map[int][]int {
 	indexesToCheckMaps := make([]map[int][]int, 0)
 	indexesToCheck := make(map[int][]int)
 
@@ -193,6 +193,42 @@ func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]*rowN
 
 // Part two
 
-func gearRatio(a, b int) int {
+func calcGearRatio(a, b int) int {
 	return a * b
+}
+
+func getSumForPartTwo(input []string, maxRow int, digitsInRows map[int][]*rowNumber) int {
+	sum := 0
+
+	for rowNum, row := range input {
+		symbolsInRow := getSymbolCol(row, nil)
+		for _, s := range symbolsInRow {
+			gears := []*rowNumber{}
+			// for one symbol '*', these are all the indexes to check
+			for rowNum, indexesToCheck := range getIndexesToCheck(rowNum, s, maxRow, len(row)-1) {
+				for _, indexToCheck := range indexesToCheck {
+					for _, digitInRow := range digitsInRows[rowNum] {
+						for _, index := range digitInRow.indexes {
+							if indexToCheck == index {
+								if !slices.Contains(gears, digitInRow) {
+									gears = append(gears, digitInRow)
+								}
+								// after this, iterate through all digitsInRows and see if there are matches,
+								// and if there are then multiply them and add them to the sum, otherwise reset and keep going
+							}
+						}
+					}
+				}
+			}
+			if len(gears) > 1 {
+				gearRatio := 1
+				for _, v := range gears {
+					gearRatio = calcGearRatio(gearRatio, v.number)
+				}
+				sum += gearRatio
+			}
+
+		}
+	}
+	return sum
 }

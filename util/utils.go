@@ -54,3 +54,8 @@ func Merge[M1 ~map[K]V, M2 ~map[K]V, K comparable, V []int](dst M1, src M2) {
 		}
 	}
 }
+
+// Returns a ptr to the value passed in
+func ToPtr[T any](value T) *T {
+	return &value
+}
