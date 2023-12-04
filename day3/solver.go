@@ -2,7 +2,6 @@ package day3
 
 import (
 	"log"
-	"maps"
 	"strconv"
 	"unicode"
 
@@ -16,9 +15,8 @@ type rowNumber struct {
 }
 
 func Solve(filename string) {
-	filename = "day3/test.txt"
 	scanner := util.StreamLines(filename)
-	digitsInRows := make(map[int][]rowNumber)
+	digitsInRows := make(map[int][]*rowNumber)
 
 	input := make([]string, 0)
 	rowNumber := 0
@@ -45,8 +43,8 @@ func getSymbolCol(input string) (cols []int) {
 	return symbolColumns
 }
 
-func getDigitsInRow(row string) []rowNumber {
-	rn := make([]rowNumber, 0)
+func getDigitsInRow(row string) []*rowNumber {
+	rn := []*rowNumber{}
 	toContinue := 0
 	for i, c := range row {
 		if toContinue != 0 {
@@ -71,7 +69,7 @@ func getDigitsInRow(row string) []rowNumber {
 					for k := i; k < endIndex; k++ {
 						indexes = append(indexes, k)
 					}
-					rn = append(rn, rowNumber{number: number, indexes: indexes})
+					rn = append(rn, &rowNumber{number: number, indexes: indexes})
 					toContinue = j
 					break
 				}
@@ -158,14 +156,14 @@ func indexesToCheckMap(input []string, filename string) map[int][]int {
 	}
 
 	for _, v := range indexesToCheckMaps {
-		maps.Copy(indexesToCheck, v)
+		util.Merge(indexesToCheck, v)
 	}
 
 	return indexesToCheck
 
 }
 
-func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]rowNumber) int {
+func getSumForPartOne(indexesToCheck map[int][]int, digitsInRows map[int][]*rowNumber) int {
 	sum := 0
 
 	for rowNumber := range indexesToCheck {

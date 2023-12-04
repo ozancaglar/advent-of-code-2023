@@ -40,3 +40,17 @@ func LineCounter(path string) (int, error) {
 		}
 	}
 }
+
+// Merge copies all key/value pairs in src adding them to dst.
+// When a key in src is already present in dst,
+// the two sets of values will be merged.
+func Merge[M1 ~map[K]V, M2 ~map[K]V, K comparable, V []int](dst M1, src M2) {
+	for k, v := range src {
+		_, ok := dst[k]
+		if ok {
+			dst[k] = append(dst[k], v...)
+		} else {
+			dst[k] = v
+		}
+	}
+}
