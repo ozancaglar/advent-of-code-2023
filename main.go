@@ -8,6 +8,7 @@ import (
 	"github.com/ozancaglar/advent-of-code-2023/day1"
 	"github.com/ozancaglar/advent-of-code-2023/day2"
 	"github.com/ozancaglar/advent-of-code-2023/day3"
+	"github.com/ozancaglar/advent-of-code-2023/day4"
 )
 
 type day struct {
@@ -21,6 +22,7 @@ func main() {
 		{Day: "1", Function: day1.Solve},
 		{Day: "2", Function: day2.Solve},
 		{Day: "3", Function: day3.Solve},
+		{Day: "4", Function: day4.Solve},
 	}
 
 	templates := &promptui.SelectTemplates{
@@ -42,5 +44,5 @@ func main() {
 		return
 	}
 
-	days[i].Function(fmt.Sprintf("day%s/input.txt", strconv.Itoa(i+1)))
+	days[i].Function(fmt.Sprintf("day%s/input .txt", strconv.Itoa(i+1)))
 }
