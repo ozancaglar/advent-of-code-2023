@@ -83,8 +83,23 @@ func Solve(filename string) {
 		}
 	}
 
-	locations := make(map[int]int)
+	log.Printf("Day five, part one answer: %v", smallestLocation(locationsForSeeds(seeds, seedToSoilMap,
+		soilToFertilizerMap,
+		fertilizerToWater,
+		waterToLight,
+		lightToTemperature,
+		temperatureToHumidity,
+		humidityToLocation)))
+}
 
+func locationsForSeeds(seeds []int, seedToSoilMap,
+	soilToFertilizerMap,
+	fertilizerToWater,
+	waterToLight,
+	lightToTemperature,
+	temperatureToHumidity,
+	humidityToLocation map[Range]int) map[int]int {
+	locations := make(map[int]int)
 	for _, s := range seeds {
 		soil := noKeyInRangeReturnSrc(seedToSoilMap, s)
 		fertilizer := noKeyInRangeReturnSrc(soilToFertilizerMap, soil)
@@ -94,8 +109,7 @@ func Solve(filename string) {
 		humidity := noKeyInRangeReturnSrc(temperatureToHumidity, temperature)
 		locations[s] = noKeyInRangeReturnSrc(humidityToLocation, humidity)
 	}
-
-	log.Printf("Day five, part one answer: %v", smallestLocation(locations))
+	return locations
 }
 
 func noKeyInRangeReturnSrc(m map[Range]int, key int) int {
