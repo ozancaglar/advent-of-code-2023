@@ -1,7 +1,6 @@
 package day5
 
 import (
-	"fmt"
 	"log"
 	"regexp"
 	"slices"
@@ -87,19 +86,12 @@ func Solve(filename string) {
 	locations := make(map[int]int)
 
 	for _, s := range seeds {
-		fmt.Println("seed", s)
 		soil := noKeyInRangeReturnSrc(seedToSoilMap, s)
-		fmt.Println("soi", soil)
 		fertilizer := noKeyInRangeReturnSrc(soilToFertilizerMap, soil)
-		fmt.Println("f", fertilizer)
 		water := noKeyInRangeReturnSrc(fertilizerToWater, fertilizer)
-		fmt.Println("w", water)
 		light := noKeyInRangeReturnSrc(waterToLight, water)
-		fmt.Println("l", light)
 		temperature := noKeyInRangeReturnSrc(lightToTemperature, light)
-		fmt.Println("t", temperature)
 		humidity := noKeyInRangeReturnSrc(temperatureToHumidity, temperature)
-		fmt.Println("h", humidity)
 		locations[s] = noKeyInRangeReturnSrc(humidityToLocation, humidity)
 	}
 
