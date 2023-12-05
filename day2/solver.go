@@ -42,7 +42,7 @@ func Solve(filename string) {
 func countCubesInGame(game string) cubeCount {
 	var c cubeCount
 	frame := strings.Split(game, ":")
-	re := regexp.MustCompile("\\d+")
+	re := regexp.MustCompile(`\d+`)
 
 	i, err := strconv.Atoi(re.FindAllString(frame[0], -1)[0])
 	if err != nil {

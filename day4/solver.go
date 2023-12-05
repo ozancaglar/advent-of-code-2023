@@ -12,7 +12,7 @@ import (
 
 func Solve(filename string) {
 	scanner := util.StreamLines(filename)
-	re := regexp.MustCompile("\\d+")
+	re := regexp.MustCompile(`\d+`)
 	cards := []string{}
 
 	winningNumbers := make(map[int][]int)

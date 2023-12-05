@@ -20,7 +20,7 @@ func (r *Range) inRange(i int) bool {
 
 func Solve(filename string) {
 	scanner := util.StreamLines("./day5/input.txt")
-	re := regexp.MustCompile("\\d+")
+	re := regexp.MustCompile(`\d+`)
 	seeds := make([]int, 0)
 	i := -1
 
