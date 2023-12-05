@@ -1,6 +1,6 @@
 module github.com/ozancaglar/advent-of-code-2023
 
-go 1.20
+go 1.21
 
 require (
 	github.com/manifoldco/promptui v0.9.0
