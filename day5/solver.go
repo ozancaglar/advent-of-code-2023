@@ -1,6 +1,7 @@
 package day5
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 	"slices"
@@ -9,19 +10,30 @@ import (
 	"github.com/ozancaglar/advent-of-code-2023/util"
 )
 
+type Range struct {
+	Start int
+	End   int
+}
+
+func (r *Range) inRange(i int) bool {
+	return r.Start <= i && i <= r.End
+}
+
 func Solve(filename string) {
 	scanner := util.StreamLines("./day5/input.txt")
 	re := regexp.MustCompile("\\d+")
 	seeds := make([]int, 0)
 	i := -1
-	seedToSoilMap := make(map[int]int)
-	soilToFertilizerMap := make(map[int]int)
-	fertilizerToWater := make(map[int]int)
-	waterToLight := make(map[int]int)
-	lightToTemperature := make(map[int]int)
-	temperatureToHumidity := make(map[int]int)
-	humidityToLocation := make(map[int]int)
-	var mapToPopulate *map[int]int
+
+	// the idea is these maps return the difference you need to add to the seed to get to the soil from a seed in a range so it's more efficient
+	seedToSoilMap := make(map[Range]int)
+	soilToFertilizerMap := make(map[Range]int)
+	fertilizerToWater := make(map[Range]int)
+	waterToLight := make(map[Range]int)
+	lightToTemperature := make(map[Range]int)
+	temperatureToHumidity := make(map[Range]int)
+	humidityToLocation := make(map[Range]int)
+	var mapToPopulate *map[Range]int
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -71,18 +83,36 @@ func Solve(filename string) {
 			populateMap(mapToPopulate, line)
 		}
 	}
+
 	locations := make(map[int]int)
 
 	for _, s := range seeds {
-		fertilizer := noKeyReturnSrc(soilToFertilizerMap, s)
-		water := noKeyReturnSrc(fertilizerToWater, fertilizer)
-		light := noKeyReturnSrc(waterToLight, water)
-		temperature := noKeyReturnSrc(lightToTemperature, light)
-		humidity := noKeyReturnSrc(temperatureToHumidity, temperature)
-		locations[s] = noKeyReturnSrc(humidityToLocation, humidity)
+		fmt.Println("seed", s)
+		soil := noKeyInRangeReturnSrc(seedToSoilMap, s)
+		fmt.Println("soi", soil)
+		fertilizer := noKeyInRangeReturnSrc(soilToFertilizerMap, soil)
+		fmt.Println("f", fertilizer)
+		water := noKeyInRangeReturnSrc(fertilizerToWater, fertilizer)
+		fmt.Println("w", water)
+		light := noKeyInRangeReturnSrc(waterToLight, water)
+		fmt.Println("l", light)
+		temperature := noKeyInRangeReturnSrc(lightToTemperature, light)
+		fmt.Println("t", temperature)
+		humidity := noKeyInRangeReturnSrc(temperatureToHumidity, temperature)
+		fmt.Println("h", humidity)
+		locations[s] = noKeyInRangeReturnSrc(humidityToLocation, humidity)
 	}
 
 	log.Printf("Day five, part one answer: %v", smallestLocation(locations))
+}
+
+func noKeyInRangeReturnSrc(m map[Range]int, key int) int {
+	for k, v := range m {
+		if k.inRange(key) {
+			return key + v
+		}
+	}
+	return key
 }
 
 func smallestLocation(locations map[int]int) int {
@@ -94,16 +124,7 @@ func smallestLocation(locations map[int]int) int {
 	return slices.Min(locationsSlice)
 }
 
-func noKeyReturnSrc(m map[int]int, k int) int {
-	v, ok := m[k]
-	if !ok {
-		return k
-	}
-
-	return v
-}
-
-func populateMap(m *map[int]int, line string) {
+func populateMap(m *map[Range]int, line string) {
 	splitLine := strings.Split(line, " ")
 	splitLineAsInt := make([]int, 0)
 	mapToPopulate := *m
@@ -113,7 +134,7 @@ func populateMap(m *map[int]int, line string) {
 		splitLineAsInt = append(splitLineAsInt, util.MustParseInt(s))
 	}
 
-	for i, j := splitLineAsInt[0], splitLineAsInt[1]; i < splitLineAsInt[0]+splitLineAsInt[2]; i, j = i+1, j+1 {
-		mapToPopulate[j] = i
-	}
+	r := Range{Start: splitLineAsInt[1], End: splitLineAsInt[1] + splitLineAsInt[2] - 1}
+	diff := splitLineAsInt[0] - splitLineAsInt[1]
+	mapToPopulate[r] = diff
 }
