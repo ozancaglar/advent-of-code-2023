@@ -36,8 +36,8 @@ func parseFile(scanner bufio.Scanner) ([]int, []int) {
 	return durationOfRaces, recordDistanceInRaces
 }
 
-func calculateDistanceTravelled(buttonHoldTime int, timeInRace int) int {
-	timeToTravel := timeInRace - buttonHoldTime
+func calculateDistanceTravelled(buttonHoldTime int, raceDuration int) int {
+	timeToTravel := raceDuration - buttonHoldTime
 
 	return timeToTravel * buttonHoldTime
 }
@@ -75,30 +75,44 @@ func partTwo(durationOfRaces, recordDistanceInRaces []int) {
 	startedBeatingRecord := 0
 	stoppedBeatingRecord := 0
 	for i := 1; i < time+10000; i += 10000 {
-		distanceTravelled := calculateDistanceTravelled(i, time)
-		if distanceTravelled > distanceToBeat && startedBeatingRecord == 0 {
-			for j := i - 10000; j < i; j++ {
-				if calculateDistanceTravelled(j, time) > distanceToBeat {
-					startedBeatingRecord = j
-					break
-				}
-			}
+		if startedBeatingRecord != 0 && stoppedBeatingRecord != 0 {
+			break
 		}
 
-		if startedBeatingRecord != 0 {
-			for i := startedBeatingRecord; i < time+10000; i += 10000 {
-				distanceTravelled := calculateDistanceTravelled(i, time)
-				if distanceTravelled < distanceToBeat && stoppedBeatingRecord == 0 {
-					for j := i - 10000; j < i; j++ {
-						if calculateDistanceTravelled(j, time) < distanceToBeat {
-							stoppedBeatingRecord = j
-							break
-						}
-					}
-				}
-			}
+		if startedBeatingRecord == 0 {
+			startedBeatingRecord = findStartRecord(i, time, distanceToBeat)
+		}
+
+		if startedBeatingRecord != 0 && stoppedBeatingRecord == 0 {
+			stoppedBeatingRecord = findStopRecord(startedBeatingRecord, time, distanceToBeat)
 		}
 	}
 
 	log.Printf("Day six, part two answer: %v", stoppedBeatingRecord-startedBeatingRecord)
+}
+
+func findStartRecord(timeToTry, raceTimeDuration, distanceToBeat int) int {
+	distanceTravelled := calculateDistanceTravelled(timeToTry, raceTimeDuration)
+	if distanceTravelled > distanceToBeat {
+		for timeInLinearSearchRange := timeToTry - 10000; timeInLinearSearchRange < timeToTry; timeInLinearSearchRange++ {
+			if calculateDistanceTravelled(timeInLinearSearchRange, raceTimeDuration) > distanceToBeat {
+				return timeInLinearSearchRange
+			}
+		}
+	}
+	return 0
+}
+
+func findStopRecord(startedBeatingRecord, raceTimeDuration, distanceToBeat int) int {
+	for k := startedBeatingRecord; k < raceTimeDuration+10000; k += 10000 {
+		distanceTravelled := calculateDistanceTravelled(k, raceTimeDuration)
+		if distanceTravelled < distanceToBeat {
+			for timeInLinearSearchRange := k - 10000; timeInLinearSearchRange < k; timeInLinearSearchRange++ {
+				if calculateDistanceTravelled(timeInLinearSearchRange, raceTimeDuration) < distanceToBeat {
+					return timeInLinearSearchRange
+				}
+			}
+		}
+	}
+	return 0
 }
