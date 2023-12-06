@@ -72,7 +72,34 @@ func partTwo(durationOfRaces, recordDistanceInRaces []int) {
 		distanceAsString += strconv.Itoa(recordDistanceInRaces[i])
 	}
 	time := util.MustParseInt(timeAsString)
-	distance := util.MustParseInt(distanceAsString)
+	distanceToBeat := util.MustParseInt(distanceAsString)
+	startedBeatingRecord := 0
+	stoppedBeatingRecord := 0
+	for i := 1; i < time+1000; i += 1000 {
+		distanceTravelled := calculateDistanceTravelled(i, time)
+		if distanceTravelled > distanceToBeat && startedBeatingRecord == 0 {
+			for j := i - 1000; j < i; j++ {
+				if calculateDistanceTravelled(j, time) > distanceToBeat {
+					startedBeatingRecord = j
+					break
+				}
+			}
+		}
 
-	fmt.Println(time, distance)
+		if startedBeatingRecord != 0 {
+			for i := startedBeatingRecord; i < time+1000; i += 1000 {
+				distanceTravelled := calculateDistanceTravelled(i, time)
+				if distanceTravelled < distanceToBeat && stoppedBeatingRecord == 0 {
+					for j := i - 1000; j < i; j++ {
+						if calculateDistanceTravelled(j, time) < distanceToBeat {
+							stoppedBeatingRecord = j
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+
+	fmt.Println(stoppedBeatingRecord - startedBeatingRecord)
 }
