@@ -2,7 +2,6 @@ package day6
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -75,10 +74,10 @@ func partTwo(durationOfRaces, recordDistanceInRaces []int) {
 	distanceToBeat := util.MustParseInt(distanceAsString)
 	startedBeatingRecord := 0
 	stoppedBeatingRecord := 0
-	for i := 1; i < time+1000; i += 1000 {
+	for i := 1; i < time+10000; i += 10000 {
 		distanceTravelled := calculateDistanceTravelled(i, time)
 		if distanceTravelled > distanceToBeat && startedBeatingRecord == 0 {
-			for j := i - 1000; j < i; j++ {
+			for j := i - 10000; j < i; j++ {
 				if calculateDistanceTravelled(j, time) > distanceToBeat {
 					startedBeatingRecord = j
 					break
@@ -87,10 +86,10 @@ func partTwo(durationOfRaces, recordDistanceInRaces []int) {
 		}
 
 		if startedBeatingRecord != 0 {
-			for i := startedBeatingRecord; i < time+1000; i += 1000 {
+			for i := startedBeatingRecord; i < time+10000; i += 10000 {
 				distanceTravelled := calculateDistanceTravelled(i, time)
 				if distanceTravelled < distanceToBeat && stoppedBeatingRecord == 0 {
-					for j := i - 1000; j < i; j++ {
+					for j := i - 10000; j < i; j++ {
 						if calculateDistanceTravelled(j, time) < distanceToBeat {
 							stoppedBeatingRecord = j
 							break
@@ -101,5 +100,5 @@ func partTwo(durationOfRaces, recordDistanceInRaces []int) {
 		}
 	}
 
-	fmt.Println(stoppedBeatingRecord - startedBeatingRecord)
+	log.Printf("Day six, part two answer: %v", stoppedBeatingRecord-startedBeatingRecord)
 }
