@@ -19,6 +19,15 @@ func StreamLines(path string) bufio.Scanner {
 	return *bufio.NewScanner(file)
 }
 
+func GetLines(path string) []string {
+	input := make([]string, 0)
+	scanner := StreamLines(path)
+	for scanner.Scan() {
+		input = append(input, scanner.Text())
+	}
+	return input
+}
+
 func LineCounter(path string) (int, error) {
 	file, err := os.Open(path)
 	if err != nil {
