@@ -1,0 +1,4 @@
+recursion
+base case last sequence all 0s
+when all sequences calculated, calculate new value at end of each sequence: end of next sequence + end of current sequence
+then there's another step to extrapolate the next value for each history - not sure how to do this just yet
