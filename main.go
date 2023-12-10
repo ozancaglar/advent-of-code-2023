@@ -13,6 +13,7 @@ import (
 	"github.com/ozancaglar/advent-of-code-2023/day5"
 	"github.com/ozancaglar/advent-of-code-2023/day6"
 	"github.com/ozancaglar/advent-of-code-2023/day7"
+	"github.com/ozancaglar/advent-of-code-2023/day8"
 )
 
 type day struct {
@@ -30,6 +31,7 @@ func main() {
 		{Day: "5", Function: day5.Solve},
 		{Day: "6", Function: day6.Solve},
 		{Day: "7", Function: day7.Solve},
+		{Day: "8", Function: day8.Solve},
 	}
 
 	templates := &promptui.SelectTemplates{
